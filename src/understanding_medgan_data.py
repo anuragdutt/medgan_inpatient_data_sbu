@@ -66,8 +66,8 @@ if __name__ == "__main__":
 	diag_col = ["pid", "visit_id", "seq", "icd_codes"]
 	diagnosis_icd = pd.DataFrame(columns = diag_col)
 
-	# for i in range(icd.shape[0]):
-	for i in range(100):
+	for i in range(icd.shape[0]):
+	# for i in range(100):
 		vid = int(visit_id[i,0])
 		pat = int(pid[i,0])
 		vs = datetime.utcfromtimestamp(int(visit[i,7])).strftime('%Y-%m-%d %H:%M:%S')
