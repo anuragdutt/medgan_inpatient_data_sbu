@@ -10,10 +10,6 @@ if __name__ == "__main__":
 	filename = "../data/hf_143_inpatient_50_plus_1lab_1dx_combined.hdf5"
 	f = h5py.File(filename, 'r')
 
-	# for k in f.keys():
-	# 	print(k)
-	# exit(0)
-
 
 	ohd = f['ohdsi']
 	# for k in ohd.keys():
@@ -70,8 +66,8 @@ if __name__ == "__main__":
 	diag_col = ["pid", "visit_id", "seq", "icd_codes"]
 	diagnosis_icd = pd.DataFrame(columns = diag_col)
 
-	for i in range(icd.shape[0]):
-	# for i in range(10000):
+	# for i in range(icd.shape[0]):
+	for i in range(100):
 		vid = int(visit_id[i,0])
 		pat = int(pid[i,0])
 		vs = datetime.utcfromtimestamp(int(visit[i,7])).strftime('%Y-%m-%d %H:%M:%S')
