@@ -15,9 +15,6 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 
 
 	dat = pd.merge(adm, dia, on = ["pid", "visit_id"], how = "inner")
-	print(adm.shape)
-	print(dia.shape)
-	print(dat.shape)
 	train, test = train_test_split(dat, test_size = t_size)
 
 	adm_train = train.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
@@ -54,9 +51,6 @@ if __name__ == "__main__":
 	adm_train, dia_train, adm_test, dia_test = trainTestSplit(af, df, t_size = t_size)
 	
 
-	print(adm_train.shape)
-	print(adm_test.shape)
-	exit(0)
 
 	adm_train.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN.csv", index = False)
 	dia_train.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv", index = False)
