@@ -48,10 +48,10 @@ if __name__ == "__main__":
 	df = "../generated/DIAGNOSES_ICD_GENERATED.csv"
 	adm_train, dia_train, adm_test, dia_test = trainTestSplit(af, df, t_size = t_size)
 	
-	adm_train.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN.csv")
-	dia_train.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv")
-	adm_test.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN_TEST.csv")
-	dia_test.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TEST.csv")
+	adm_train.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN.csv", index = False)
+	dia_train.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv", index = False)
+	adm_test.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN_TEST.csv"index = False)
+	dia_test.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TEST.csv", index = False)
 
 
 
