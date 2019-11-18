@@ -14,7 +14,7 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 	dia = pd.read_csv(diag_file)
 
 	dia['icd_3digit'] = dia['icd_codes'].map(convertTo3DigitIcd9)
-	print(len(chk['icd_3digit'].unique()))
+	print(len(dia['icd_3digit'].unique()))
 
 
 	adm['pid-vid'] = adm['pid'].apply(lambda x: str(x)) + "-" + adm['visit_id'].apply(lambda x: str(x))
@@ -44,6 +44,9 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 	dia_test = dia_test.drop(['icd_3digit'], axis = 1)
 
 
+	print(adm[adm['visit_id'].isin(['2014'])])
+	print(dia[dia['visit_id'].isin(['2014'])])
+	exit(0)
 
 	# print(adm_train.shape)
 	# print(adm_test.shape)
@@ -55,6 +58,18 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 
 if __name__ == "__main__":
 
+	t_size = 0.2
+
+	af = "../generated/ADMISSIONS_GENERATED_NOMERGE.csv"
+	df = "../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv"
+	adm_train, dia_train, adm_test, dia_test = trainTestSplit(af, df, t_size = t_size)
+	
+
+
+	adm_train.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN.csv", index = False)
+	dia_train.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv", index = False)
+	adm_test.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN_TEST.csv", index = False)
+	dia_test.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TEST.csv", index = False)
 	t_size = 0.2
 
 	af = "../generated/ADMISSIONS_GENERATED_NOMERGE.csv"
