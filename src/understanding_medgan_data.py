@@ -83,10 +83,8 @@ if __name__ == "__main__":
 	diagnosis_icd.to_csv("../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv", index = False)
 
 
-
-
-	adm = pd.read_csv("../generated/ADMISSIONS_GENERATED_NOMERGE.csv")
-	dia = pd.read_csv("../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv")
+	# adm = pd.read_csv("../generated/ADMISSIONS_GENERATED_NOMERGE.csv")
+	# dia = pd.read_csv("../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv")
 
 	# print(adm.shape)
 	# print(dia.shape)
