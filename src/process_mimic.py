@@ -56,7 +56,11 @@ if __name__ == '__main__':
         tokens = line.strip().split(',')
         pid = int(tokens[0])
         admId = int(tokens[1])
-        admTime = datetime.strptime(tokens[2], '%Y-%m-%d %H:%M:%S')
+        try: 
+            admTime = datetime.strptime(tokens[2], '%Y-%m-%d %H:%M:%S')
+        except:
+            print(line)
+            print(admTime)
         admDateMap[admId] = admTime
         if pid in pidAdmMap: pidAdmMap[pid].append(admId)
         else: pidAdmMap[pid] = [admId]
