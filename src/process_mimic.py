@@ -15,21 +15,22 @@ import _pickle as pickle
 import numpy as np
 from datetime import datetime
 
-def convert_to_icd9(dxStr):
-    if dxStr.startswith('E'):
-        if len(dxStr) > 4: return dxStr[:4] + '.' + dxStr[4:]
-        else: return dxStr
-    else:
-        if len(dxStr) > 3: return dxStr[:3] + '.' + dxStr[3:]
-        else: return dxStr
+# def convert_to_icd9(dxStr):
+#     if dxStr.startswith('E'):
+#         if len(dxStr) > 4: return dxStr[:4] + '.' + dxStr[4:]
+#         else: return dxStr
+#     else:
+#         if len(dxStr) > 3: return dxStr[:3] + '.' + dxStr[3:]
+#         else: return dxStr
     
 def convert_to_3digit_icd9(dxStr):
-    if dxStr.startswith('E'):
-        if len(dxStr) > 4: return dxStr[:4]
-        else: return dxStr
-    else:
-        if len(dxStr) > 3: return dxStr[:3]
-        else: return dxStr
+    return dxStr[:3]
+    # if dxStr.startswith('E'):
+    #     if len(dxStr) > 4: return dxStr[:4]
+    #     else: return dxStr
+    # else:
+    #     if len(dxStr) > 3: return dxStr[:3]
+    #     else: return dxStr
 
 if __name__ == '__main__':
     admissionFile = sys.argv[1]
@@ -70,7 +71,7 @@ if __name__ == '__main__':
         tokens = line.strip().split(',')
         admId = int(tokens[1])
         #dxStr = 'D_' + convert_to_icd9(tokens[4][1:-1]) ############## Uncomment this line and comment the line below, if you want to use the entire ICD9 digits.
-        dxStr = 'D_' + convert_to_3digit_icd9(tokens[3][1:-1])
+        dxStr = 'D_' + convert_to_3digit_icd9(tokens[3])
         if admId in admDxMap: admDxMap[admId].append(dxStr)
         else: admDxMap[admId] = [dxStr]        
     infd.close()
@@ -80,9 +81,6 @@ if __name__ == '__main__':
     pidSeqMap = {}
     for pid, admIdList in pidAdmMap.items():
         #if len(admIdList) < 2: continue
-        print(pid)
-        if pid == 1664:
-            print(admIdList)
         sortedList = sorted([(admDateMap[admId], admDxMap[admId]) for admId in admIdList])
         pidSeqMap[pid] = sortedList
     
