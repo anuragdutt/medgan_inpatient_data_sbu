@@ -12,14 +12,6 @@ if __name__ == "__main__":
 
 
 	ohd = f['ohdsi']
-	# for k in ohd.keys():
-		# print(k)
-
-	# ic9_header = ohd['condition_occurrence/column_annotations']
-	# ic9 = ohd['condition_occurrence/core_array']
-	# print(ic9_header[:4])
-	# print(ic9.shape)
-	# exit(0)
 
 	# patient id field
 	pid_header = ohd['identifiers/person/column_annotations']
@@ -28,14 +20,10 @@ if __name__ == "__main__":
 	# visit occurences
 	visit_header = ohd['visit_occurrence/column_annotations']
 	visit = ohd['visit_occurrence/core_array']
-	# print(visit_header.shape)
-	# print(visit_header[:10])
-	# exit(0)
+
 	## visit_id
 	visit_id_header = ohd['identifiers/visit_occurrence/column_annotations']
 	visit_id = ohd['identifiers/visit_occurrence/core_array']
-	# print(visit_id.shape)
-	# print(visit_id_header[:4])
 
 	# ICD codes:
 	icd_keys = ohd["condition_occurrence/source_concept/"]
@@ -43,16 +31,9 @@ if __name__ == "__main__":
 
 	icd_header_annon = ohd["condition_occurrence/source_concept/column_annotations"]
 	icd = ohd["condition_occurrence/source_concept/core_array"]
-	# print([code.decode('UTF-8') for code in icd_header_annon[2,]])
-	# exit(0)
-	# icd_codes = [np.frombuffer(code, dtype = "str")[0] for code in icd_header_annon[2,]]
 	icd_codes = np.array([code.decode('UTF-8') for code in icd_header_annon[2,]])
 
 	
-	# headers  = [h[:3] for h in icd_codes]
-	# headers_unique = set(headers)
-	# print(len(headers_unique))
-	# print(icd_header_annon[:4])
 
 
 
@@ -61,11 +42,6 @@ if __name__ == "__main__":
 	visit_start = []
 	visit_end = []
 
-	# for i in range(visit_id.shape[0]):
-		# visit_ids.append(visit_id[i,0])
-		# pids.append(pid[i,0])
-		# visit_start.append(datetime.utcfromtimestamp(int(visit[i,7])).strftime('%Y-%m-%d %H:%M:%S'))
-		# visit_end.append(datetime.utcfromtimestamp(int(visit[i,8])).strftime('%Y-%m-%d %H:%M:%S'))	
 
 	diag_col = ["pid", "visit_id", "seq", "icd_codes"]
 	diagnosis_icd = pd.DataFrame(columns = diag_col)
@@ -82,16 +58,6 @@ if __name__ == "__main__":
 		visit_start.append(vs)
 		visit_end.append(ve)	
 		
-
-		# for j in range(len(icd_codes)):
-		# 	if icd[i,j] != 0:
-		# 		seq = seq + 1
-		# 		diagnosis_icd = diagnosis_icd.append({
-		# 			"pid": int(pid[i, 0]), 
-		# 			"visit_id": int(visit_id[i, 0]),
-		# 			"seq": seq,
-		# 			"icd_codes": icd_codes[j] 
-		# 			}, ignore_index = True)
 
 		icd9 = icd_codes[np.where(icd[i,:] != 0)]
 		num_codes = icd9.size
@@ -119,15 +85,15 @@ if __name__ == "__main__":
 
 
 
-	# adm = pd.read_csv("../generated/ADMISSIONS_GENERATED.csv")
-	# dia = pd.read_csv("../generated/DIAGNOSES_ICD_GENERATED.csv")
+	adm = pd.read_csv("../generated/ADMISSIONS_GENERATED_NOMERGE.csv")
+	dia = pd.read_csv("../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv")
 
 
 
-	# df = pd.merge(adm, dia, on = ["pid", "visit_id"], how = "inner")
+	df = pd.merge(adm, dia, on = ["pid", "visit_id"], how = "inner")
 
-	# adm = df.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
-	# dia = df.loc[:, ['pid', 'visit_id', 'seq', 'icd_codes']]
+	adm = df.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
+	dia = df.loc[:, ['pid', 'visit_id', 'seq', 'icd_codes']]
 
-	# adm.to_csv("../generated/ADMISSIONS_GENERATED.csv", index = False)
-	# dia.to_csv("../generated/DIAGNOSES_ICD_GENERATED.csv", index = False)
+	adm.to_csv("../generated/ADMISSIONS_GENERATED.csv", index = False)
+	dia.to_csv("../generated/DIAGNOSES_ICD_GENERATED.csv", index = False)
