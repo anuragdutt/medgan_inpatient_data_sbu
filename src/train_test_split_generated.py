@@ -44,7 +44,7 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 	dia_test = dia_test.drop(['icd_3digit'], axis = 1)
 
 
-	print(adm[adm['visit_id'].isin(['2014'])])
+	print(adm_train[adm_train['visit_id'].isin(['2014'])])
 	print(dia[dia['visit_id'].isin(['2014'])])
 	exit(0)
 
