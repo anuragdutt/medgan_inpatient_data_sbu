@@ -18,7 +18,7 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 
 
 	adm['pid-vid'] = adm['pid'].apply(lambda x: str(x)) + "-" + adm['visit_id'].apply(lambda x: str(x))
-	dia['pid-vid'] = dia['pid'].apply(lambda x: str(x)) + dia['visit_id'].apply(lambda x: str(x))
+	dia['pid-vid'] = dia['pid'].apply(lambda x: str(x)) + "-" + dia['visit_id'].apply(lambda x: str(x))
 
 
 	dia_train, dia_test = train_test_split(dia, test_size = t_size)
@@ -27,6 +27,8 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 
 	adm_train = adm[adm['pid-vid'].isin(dpv_train)]
 	adm_test = adm[adm['pid-vid'].isin(dpv_test)]
+
+
 
 	adm_train = adm_train.drop(['pid-vid'], axis = 1)
 	adm_test = adm_test.drop(['pid-vid'], axis = 1)
@@ -64,18 +66,10 @@ if __name__ == "__main__":
 	df = "../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv"
 	adm_train, dia_train, adm_test, dia_test = trainTestSplit(af, df, t_size = t_size)
 	
-
-
-	adm_train.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN.csv", index = False)
-	dia_train.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv", index = False)
-	adm_test.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN_TEST.csv", index = False)
-	dia_test.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TEST.csv", index = False)
-	t_size = 0.2
-
-	af = "../generated/ADMISSIONS_GENERATED_NOMERGE.csv"
-	df = "../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv"
-	adm_train, dia_train, adm_test, dia_test = trainTestSplit(af, df, t_size = t_size)
-	
+	print("Shape of ADMISSION TRAIN:", adm_train.shape)
+	print("Shape of ADMISSION TEST:", adm_test.shape)
+	print("Shape of DIA TRAIN:", dia_train.shape)
+	print("Shape of DIA TEST:", dia_test.shape)
 
 
 	adm_train.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN.csv", index = False)
