@@ -47,7 +47,7 @@ if __name__ == "__main__":
 	diagnosis_icd = pd.DataFrame(columns = diag_col)
 
 	# for i in range(icd.shape[0]):
-	for i in range(2000):
+	for i in range(10001	):
 		vid = int(visit_id[i,0])
 		pat = int(pid[i,0])
 		vs = datetime.utcfromtimestamp(int(visit[i,7])).strftime('%Y-%m-%d %H:%M:%S')
@@ -88,14 +88,17 @@ if __name__ == "__main__":
 	adm = pd.read_csv("../generated/ADMISSIONS_GENERATED_NOMERGE.csv")
 	dia = pd.read_csv("../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv")
 
+	# print(adm.shape)
+	# print(dia.shape)
 
+	# df = pd.merge(adm, dia, on = ["pid", "visit_id"], how = "inner")
 
-	df = pd.merge(adm, dia, on = ["pid", "visit_id"], how = "inner")
+	# adm = df.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
+	# adm['pid-vid'] = adm['pid'] + adm['visit_id']
 
-	adm = df.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
-	dia = df.loc[:, ['pid', 'visit_id', 'seq', 'icd_codes']]
+	# dia = df.loc[:, ['pid', 'visit_id', 'seq', 'icd_codes']]
 
-	adm.to_csv("../generated/ADMISSIONS_GENERATED.csv", index = False)
-	dia.to_csv("../generated/DIAGNOSES_ICD_GENERATED.csv", index = False)
+	# adm.to_csv("../generated/ADMISSIONS_GENERATED.csv", index = False)
+	# dia.to_csv("../generated/DIAGNOSES_ICD_GENERATED.csv", index = False)
 
 
