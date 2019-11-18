@@ -46,8 +46,8 @@ if __name__ == "__main__":
 	diag_col = ["pid", "visit_id", "seq", "icd_codes"]
 	diagnosis_icd = pd.DataFrame(columns = diag_col)
 
-	for i in range(icd.shape[0]):
-	# for i in range(100):
+	# for i in range(icd.shape[0]):
+	for i in range(2000):
 		vid = int(visit_id[i,0])
 		pat = int(pid[i,0])
 		vs = datetime.utcfromtimestamp(int(visit[i,7])).strftime('%Y-%m-%d %H:%M:%S')
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
 
 	admissions.to_csv("../generated/ADMISSIONS_GENERATED_NOMERGE.csv", index = False)
-	diagnosis_icd.to_csv("../generated/DIAGNOSES_ICD_GENERATED_NO_MERGE.csv", index = False)
+	diagnosis_icd.to_csv("../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv", index = False)
 
 
 
@@ -97,3 +97,5 @@ if __name__ == "__main__":
 
 	adm.to_csv("../generated/ADMISSIONS_GENERATED.csv", index = False)
 	dia.to_csv("../generated/DIAGNOSES_ICD_GENERATED.csv", index = False)
+
+
