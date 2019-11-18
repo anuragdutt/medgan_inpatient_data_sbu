@@ -47,9 +47,13 @@ if __name__ == "__main__":
 	# exit(0)
 	# icd_codes = [np.frombuffer(code, dtype = "str")[0] for code in icd_header_annon[2,]]
 	icd_codes = np.array([code.decode('UTF-8') for code in icd_header_annon[2,]])
-	# print(icd_codes)
+
+	
+	# headers  = [h[:3] for h in icd_codes]
+	# headers_unique = set(headers)
+	# print(len(headers_unique))
 	# print(icd_header_annon[:4])
-	# exit(0)
+
 
 
 	visit_ids = []
@@ -109,19 +113,21 @@ if __name__ == "__main__":
 								"visit_end": visit_end})
 
 
-	admissions.to_csv("../generated/ADMISSIONS_GENERATED.csv", index = False)
-	diagnosis_icd.to_csv("../generated/DIAGNOSES_ICD_GENERATED.csv", index = False)
-
-
-	adm = pd.read_csv("../generated/ADMISSIONS_GENERATED.csv")
-	dia = pd.read_csv("../generated/DIAGNOSES_ICD_GENERATED.csv")
+	admissions.to_csv("../generated/ADMISSIONS_GENERATED_NOMERGE.csv", index = False)
+	diagnosis_icd.to_csv("../generated/DIAGNOSES_ICD_GENERATED_NO_MERGE.csv", index = False)
 
 
 
-	df = pd.merge(adm, dia, on = ["pid", "visit_id"], how = "inner")
 
-	adm = df.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
-	dia = df.loc[:, ['pid', 'visit_id', 'seq', 'icd_codes']]
+	# adm = pd.read_csv("../generated/ADMISSIONS_GENERATED.csv")
+	# dia = pd.read_csv("../generated/DIAGNOSES_ICD_GENERATED.csv")
 
-	adm.to_csv("../generated/ADMISSIONS_GENERATED.csv", index = False)
-	dia.to_csv("../generated/DIAGNOSES_ICD_GENERATED.csv", index = False)
+
+
+	# df = pd.merge(adm, dia, on = ["pid", "visit_id"], how = "inner")
+
+	# adm = df.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
+	# dia = df.loc[:, ['pid', 'visit_id', 'seq', 'icd_codes']]
+
+	# adm.to_csv("../generated/ADMISSIONS_GENERATED.csv", index = False)
+	# dia.to_csv("../generated/DIAGNOSES_ICD_GENERATED.csv", index = False)
