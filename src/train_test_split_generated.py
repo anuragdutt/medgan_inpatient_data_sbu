@@ -13,15 +13,41 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 	adm = pd.read_csv(adm_file)
 	dia = pd.read_csv(diag_file)
 
+	dia['icd_3digit'] = dia['icd_codes'].map(convertTo3DigitIcd9)
+	print(len(chk['icd_3digit'].unique()))
 
-	dat = pd.merge(adm, dia, on = ["pid", "visit_id"], how = "inner")
-	train, test = train_test_split(dat, test_size = t_size)
 
-	adm_train = train.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
-	dia_train = train.loc[:, ['pid', 'visit_id', 'seq', 'icd_codes']]
+	adm['pid-vid'] = adm['pid'] + adm['visit_id']
+	dia['pid-vid'] = dia['pid'] + dia['visit_id']
 
-	adm_test = test.loc[:,['pid', 'visit_id', 'visit_start', 'visit_end']]
-	dia_test = test.loc[:, ['pid', 'visit_id', 'seq', 'icd_codes']]
+	dia_train, dia_test = train_test_split(dia, test_size = t_size)
+	dpv_train = dia_train['pid-vid'].tolist()
+	dpv_test = dia_test['pid-vid'].tolist()
+
+	adm_train = adm[adm['pid-vid'].isin(dpv_train)]
+	adm_test = adm[adm['pid-vid'].isin(dpv_test)]
+
+	adm_train = adm_train.drop(['pid-vid'], axis = 1)
+	adm_test = adm_test.drop(['pid-vid'], axis = 1)
+	dia_train = dia_train.drop(['pid-vid'], axis = 1)
+	dia_test = dia_test.drop(['pid-vid'], axis = 1)
+
+	dia_train['icd_3digit'] = dia_train['icd_codes'].map(convertTo3DigitIcd9)
+	print(len(dia_train['icd_3digit'].unique()))
+
+	dia_test['icd_3digit'] = dia_test['icd_codes'].map(convertTo3DigitIcd9)
+	print(len(dia_test['icd_3digit'].unique()))
+
+	dia = dia.drop(['icd_3digit'], axis = 1)
+	dia_train = dia_train.drop(['icd_3digit'], axis = 1)
+	dia_test = dia_test.drop(['icd_3digit'], axis = 1)
+
+
+
+	# print(adm_train.shape)
+	# print(adm_test.shape)
+	# print(dia_train.shape)
+	# print(dia_test.shape)
 
 	return adm_train, dia_train, adm_test, dia_test
 
@@ -34,7 +60,6 @@ if __name__ == "__main__":
 	chk = pd.merge(adm_chk, dia_chk, on = ["pid", "visit_id"], how = "outer")
 	chk['icd_3digit'] = chk['icd_codes'].map(convertTo3DigitIcd9)
 	print(len(chk['icd_3digit'].unique()))
-
 
 
 	# adm = pd.read_csv("../generated/ADMISSIONS_GENERATED.csv")
