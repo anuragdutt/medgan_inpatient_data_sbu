@@ -9,7 +9,7 @@ def convertTo3DigitIcd9(dxStr):
 	return str(dxStr)[:3]	
 
 
-def trainTestSplit(adm_file, diag_file, t_size = 0.2):
+def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2):
 	adm = pd.read_csv(adm_file)
 	dia = pd.read_csv(diag_file)
 
@@ -19,16 +19,22 @@ def trainTestSplit(adm_file, diag_file, t_size = 0.2):
 
 	adm['pid-vid'] = adm['pid'].apply(lambda x: str(x)) + "-" + adm['visit_id'].apply(lambda x: str(x))
 	dia['pid-vid'] = dia['pid'].apply(lambda x: str(x)) + "-" + dia['visit_id'].apply(lambda x: str(x))
+	
+	#combining pid check
+	apvid = adm['pid-vid'].tolist()
+	dpvid = dia['pid-vid'].tolist()
+	cpvid = list(set(apvid) & set(dpvid))
+
+	adm = adm[adm['pid-vid'].isin(cpvid)]
+	dia = dia[dia['pid-vid'].isin(cpvid)]
 
 
-	dia_train, dia_test = train_test_split(dia, test_size = t_size)
-	dpv_train = dia_train['pid-vid'].tolist()
-	dpv_test = dia_test['pid-vid'].tolist()
+	adm_train, adm_test = train_test_split(adm, test_size = t_size)
+	apv_train = adm_train['pid-vid'].tolist()
+	apv_test = adm_test['pid-vid'].tolist()
 
-	adm_train = adm[adm['pid-vid'].isin(dpv_train)]
-	adm_test = adm[adm['pid-vid'].isin(dpv_test)]
-
-
+	dia_train = dia[dia['pid-vid'].isin(apv_train)]
+	dia_test = dia[dia['pid-vid'].isin(apv_test)]
 
 	adm_train = adm_train.drop(['pid-vid'], axis = 1)
 	adm_test = adm_test.drop(['pid-vid'], axis = 1)
@@ -64,7 +70,7 @@ if __name__ == "__main__":
 
 	af = "../generated/ADMISSIONS_GENERATED_NOMERGE.csv"
 	df = "../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv"
-	adm_train, dia_train, adm_test, dia_test = trainTestSplit(af, df, t_size = t_size)
+	adm_train, dia_train, adm_test, dia_test = trainTestSplitEncounter(af, df, t_size = t_size)
 	
 	print("Shape of ADMISSION TRAIN:", adm_train.shape)
 	print("Shape of ADMISSION TEST:", adm_test.shape)
