@@ -78,6 +78,9 @@ if __name__ == "__main__":
 								"visit_start": visit_start,
 								"visit_end": visit_end})
 
+	adm_col = ["pid", "visit_id", "visit_start", "visit_end"]
+	admissions = admissions.loc[:, adm_col]
+
 	print(admissions.head())
 	exit(0)
 
