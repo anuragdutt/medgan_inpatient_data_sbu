@@ -47,7 +47,7 @@ if __name__ == "__main__":
 	diagnosis_icd = pd.DataFrame(columns = diag_col)
 
 	# for i in range(icd.shape[0]):
-	for i in range(1001):
+	for i in range(51):
 		vid = int(visit_id[i,0])
 		pat = int(pid[i,0])
 		vs = datetime.utcfromtimestamp(int(visit[i,7])).strftime('%Y-%m-%d %H:%M:%S')
@@ -78,6 +78,8 @@ if __name__ == "__main__":
 								"visit_start": visit_start,
 								"visit_end": visit_end})
 
+	print(admissions.head())
+	exit(0)
 
 	admissions.to_csv("../generated/ADMISSIONS_GENERATED_NOMERGE.csv", index = False)
 	diagnosis_icd.to_csv("../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv", index = False)
