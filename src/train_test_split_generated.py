@@ -28,8 +28,8 @@ def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2):
 	adm = adm[adm['pid-vid'].isin(cpvid)]
 	dia = dia[dia['pid-vid'].isin(cpvid)]
 
-	print(adm[adm['visit_id'] == 2014])
-	exit(0)
+	# print(adm[adm['visit_id'] == 2014])
+	# exit(0)
 
 	adm_train, adm_test = train_test_split(adm, test_size = t_size)
 	apv_train = adm_train['pid-vid'].tolist()
