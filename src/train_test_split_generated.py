@@ -28,6 +28,8 @@ def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2):
 	adm = adm[adm['pid-vid'].isin(cpvid)]
 	dia = dia[dia['pid-vid'].isin(cpvid)]
 
+	print(adm[adm['visit_id'] == 2014])
+	exit(0)
 
 	adm_train, adm_test = train_test_split(adm, test_size = t_size)
 	apv_train = adm_train['pid-vid'].tolist()
@@ -80,7 +82,7 @@ if __name__ == "__main__":
 
 	adm_train.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN.csv", index = False)
 	dia_train.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv", index = False)
-	adm_test.to_csv("../generated/ADMISSIONS_GENERATED_TRAIN_TEST.csv", index = False)
+	adm_test.to_csv("../generated/ADMISSIONS_GENERATED_TEST.csv", index = False)
 	dia_test.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TEST.csv", index = False)
 
 
