@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import _pickle as pickle
 
+
 def convertTo3DigitIcd9(dxStr):
 	return "D_" + str(dxStr)[:3]	
 
@@ -47,24 +48,56 @@ if __name__ == "__main__":
 	ch = list(count_headers.keys())
 	bh = list(binary_headers.keys())
 
-	diag_icd_file = "../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv"
+	# diag_icd_file = "../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv"
 
 
-	ba, ca = transformHeaders(diag_icd_file, ch)
+	# ba, ca = transformHeaders(diag_icd_file, ch)
 
-	pickle.dump(ba, open("../generated/train_binary.matrix", 'wb'), -1)
-	pickle.dump(ca, open("../generated/train_count.matrix", 'wb'), -1)
+	# pickle.dump(ba, open("../generated/train_binary.matrix", 'wb'), -1)
+	# pickle.dump(ca, open("../generated/train_count.matrix", 'wb'), -1)
 	
-	# t1 = np.load("../generated/train_binary.matrix", allow_pickle = True)
-	# t2 = np.load("../generated/train_count.matrix", allow_pickle = True)
-	# print(t1.shape)
-	# print(t2.shape)
-	# print(t1)
-	# exit(0)
 
-	# binary_file = "../synthetic/cerner_binary.npy" 
-	# binary_dat = np.load(binary_file)
-	# print(binary_dat.shape)
+
+	ba = np.load("../generated/train_binary.matrix", allow_pickle = True)
+	ca = np.load("../generated/train_count.matrix", allow_pickle = True)
+	print(ba.shape)
+	print(ca.shape)
+
+
+	binary_file = "../synthetic/cerner_binary.npy" 
+	binary_dat = np.load(binary_file)
+	count_file = "../synthetic/cerner_count.npy" 
+	count_dat = np.load(count_file)
+
+	print(binary_dat.shape)
+	print(count_dat.shape)
+
+	ctrain = pd.DataFrame(data = ca,
+						columns = ch)
+	btrain = pd.DataFrame(data = ba,
+						columns = bh)
+
+	cgenerated = pd.DataFrame(data = count_dat,
+						columns = ch)
+	bgenerated = pd.DataFrame(data = binary_dat,
+						columns = bh)
+	bgenerated[bgenerated >= 0.5] = 1
+	bgenerated[bgenerated < 0.5] = 0
+
+	count_train_means = ctrain.mean(axis = 0)
+	count_generated_means = cgenerated.mean(axis = 0)
+	count_error = abs(count_generated_means - count_train_means)
+	mae_count = count_error.mean()
+
+	binary_train_means = btrain.mean(axis = 0)
+	binary_generated_means = bgenerated.mean(axis = 0)
+	binary_error = abs(binary_generated_means - binary_train_means)
+	mae_binary = binary_error.mean()
+
+	print(count_generated_means[count_generated_means == 0].shape)
+	print(binary_generated_means[binary_generated_means == 0].shape)
+	print(mae_binary, mae_count)
+
 
 	# tmp = binary_dat[1]
 	# tmp = tmp[tmp >= 0.01]
