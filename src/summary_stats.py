@@ -49,18 +49,32 @@ if __name__ == "__main__":
 	bh = list(binary_headers.keys())
 
 	# diag_icd_file_train = "../generated/DIAGNOSES_ICD_GENERATED_TRAIN.csv"
-
-
 	# ba_train, ca_train = transformHeaders(diag_icd_file_train, ch)
-
 	# pickle.dump(ba_train, open("../generated/train_binary.matrix", 'wb'), -1)
 	# pickle.dump(ca_train, open("../generated/train_count.matrix", 'wb'), -1)
 	
 
-	diag_icd_file_test = "../generated/DIAGNOSES_ICD_GENERATED_TEST.csv"
-	ba_test, ca_test = transformHeaders(diag_icd_file_test, ch)
-	pickle.dump(ba_test, open("../generated/test_binary.matrix", 'wb'), -1)
-	pickle.dump(ca_test, open("../generated/test_count.matrix", 'wb'), -1)
+	# diag_icd_file_test = "../generated/DIAGNOSES_ICD_GENERATED_TEST.csv"
+	# ba_test, ca_test = transformHeaders(diag_icd_file_test, ch)
+	# pickle.dump(ba_test, open("../generated/test_binary.matrix", 'wb'), -1)
+	# pickle.dump(ca_test, open("../generated/test_count.matrix", 'wb'), -1)
+
+
+	binary_file = "../synthetic/cerner_binary.npy" 
+	binary_dat = np.load(binary_file)
+	count_file = "../synthetic/cerner_count.npy" 
+	count_dat = np.load(count_file)
+	print(binary_dat.shape)
+	print(count_dat.shape)
+	cgenerated = pd.DataFrame(data = count_dat,
+						columns = ch)
+	bgenerated = pd.DataFrame(data = binary_dat,
+						columns = bh)
+	bgenerated[bgenerated >= 0.5] = 1
+	bgenerated[bgenerated < 0.5] = 0
+
+
+########Train
 
 
 	ba_train = np.load("../generated/train_binary.matrix", allow_pickle = True)
@@ -69,25 +83,11 @@ if __name__ == "__main__":
 	print(ca_train.shape)
 
 
-	binary_file = "../synthetic/cerner_binary.npy" 
-	binary_dat = np.load(binary_file)
-	count_file = "../synthetic/cerner_count.npy" 
-	count_dat = np.load(count_file)
-
-	print(binary_dat.shape)
-	print(count_dat.shape)
-
 	ctrain = pd.DataFrame(data = ca_train,
 						columns = ch)
 	btrain = pd.DataFrame(data = ba_train,
 						columns = bh)
 
-	cgenerated = pd.DataFrame(data = count_dat,
-						columns = ch)
-	bgenerated = pd.DataFrame(data = binary_dat,
-						columns = bh)
-	bgenerated[bgenerated >= 0.5] = 1
-	bgenerated[bgenerated < 0.5] = 0
 
 	count_train_means = ctrain.mean(axis = 0)
 	count_generated_means = cgenerated.mean(axis = 0)
@@ -116,6 +116,72 @@ if __name__ == "__main__":
 	df_mae['count_no_record_columns'] = count_generated_means[count_generated_means == 0].shape
 
 	df_mae.to_csv("../summary_stats/mae_train.csv")
+
+
+############Test
+	
+	ba_test = np.load("../generated/test_binary.matrix", allow_pickle = True)
+	ca_test = np.load("../generated/test_count.matrix", allow_pickle = True)
+	print(ba_test.shape)
+	print(ca_test.shape)
+
+
+	ctest = pd.DataFrame(data = ca_test,
+						columns = ch)
+	btest = pd.DataFrame(data = ba_test,
+						columns = bh)
+
+	cgenerated = pd.DataFrame(data = count_dat,
+						columns = ch)
+	bgenerated = pd.DataFrame(data = binary_dat,
+						columns = bh)
+	bgenerated[bgenerated >= 0.5] = 1
+	bgenerated[bgenerated < 0.5] = 0
+
+	count_test_means = ctest.mean(axis = 0)
+	count_generated_means = cgenerated.mean(axis = 0)
+	count_error = abs(count_generated_means - count_test_means)
+	mae_count = count_error.mean()
+
+	binary_test_means = btest.mean(axis = 0)
+	binary_generated_means = bgenerated.mean(axis = 0)
+	binary_error = abs(binary_generated_means - binary_test_means)
+	mae_binary = binary_error.mean()
+
+	df_test_error = pd.DataFrame()
+	df_test_error['icd_codes'] = ch
+	df_test_error['binary_test_mean_error'] = binary_test_means.tolist()
+	df_test_error['count_test_mean_error'] = count_test_means.tolist()
+	df_test_error['binary_generated_mean_error'] = binary_generated_means.tolist()
+	df_test_error['count_generated_mean_error'] = count_generated_means.tolist()
+	df_test_error['binary_absolute_error'] = binary_error
+	df_test_error['count_absolute_error'] = count_error
+	df_test_error.to_csv("../summary_stats/icd_codes_test_error_matrix.csv")
+
+	df_mae = pd.DataFrame()
+	df_mae['binary_mae'] = mae_binary
+	df_mae['count_mae'] = mae_count
+	df_mae['binary_no_record_columns'] = binary_generated_means[binary_generated_means == 0].shape
+	df_mae['count_no_record_columns'] = count_generated_means[count_generated_means == 0].shape
+
+	df_mae.to_csv("../summary_stats/mae_test.csv")
+
+
+## Calculate correlations
+	count_train_corr = ctrain.corr()
+	binary_train_corr = btrain.corr()
+	count_test_corr = ctest.corr()
+	binary_test_corr = btest.corr()
+	count_generated_corr = cgenerated.corr()
+	binary_generated_corr = bgenerated.corr()
+	
+	count_train_corr.to_csv("../summary_stats/count_train_corr.csv")
+	binary_train_corr.to_csv("../summary_stats/binary_train_corr.csv")
+	count_test_corr.to_csv("../summary_stats/count_test_corr.csv")
+	binary_test_corr.to_csv("../summary_stats/binary_test_corr.csv")
+	count_generated_corr.to_csv("../summary_stats/count_generated_corr.csv")
+	binary_generated_corr.to_csv("../summary_stats/binary_test_generated.csv")
+
 
 	# tmp = binary_dat[1]
 	# tmp = tmp[tmp >= 0.01]
