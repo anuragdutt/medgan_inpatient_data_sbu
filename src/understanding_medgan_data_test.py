@@ -2,6 +2,15 @@ import h5py
 import numpy as np
 from datetime import datetime
 import pandas as pd
+import multiprocessing
+
+
+
+# def getData(visit_id, visit, pid, i):
+# 	vid = int(visit_id[i,0])
+# 	pat = int(pid[i,0])
+# 	vs = datetime.utcfromtimestamp(int(visit[i,7])).strftime('%Y-%m-%d %H:%M:%S')
+# 	ve = datetime.utcfromtimestamp(int(visit[i,8])).strftime('%Y-%m-%d %H:%M:%S')
 
 
 
@@ -33,7 +42,6 @@ if __name__ == "__main__":
 	icd = ohd["condition_occurrence/source_concept/core_array"]
 	icd_codes = np.array([code.decode('UTF-8') for code in icd_header_annon[2,]])
 
-	
 
 
 
