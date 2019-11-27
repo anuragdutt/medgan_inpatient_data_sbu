@@ -26,12 +26,22 @@ def find_knn_trial(X_org, X_gen, k=1, n_rand=400):
 
 
 if __name__ == "__main__":
-	x_train_headers = list(np.load("../pretrain/x_train.types", allow_pickle = True).keys())
-	
-	fn_generated = "../synthetic/x_train_binary_synthetic.npy"
-	x_train_generated = np.load(fn_generated)
 
-	fn_real = "../pretrain/x_train.matrix"
+	f_generated = sys.argv[1] 
+	f_real = sys.argv[2]
+	f_headers = sys.argv[3]
+
+	# x_train_headers = list(np.load("../pretrain/x_train.types", allow_pickle = True).keys())
+	x_train_headers = list(np.load(f_headers, allow_pickle = True).keys())
+	
+	# fn_generated = "../synthetic/x_train_binary_synthetic.npy"
+	fn_generated = f_generated
+	x_train_generated = np.load(fn_generated)
+	x_train_generated[x_train_generated >= 0.5] = 1
+	x_train_generated[x_train_generated < 0.5] = 0
+
+	# fn_real = "../pretrain/x_train.matrix"
+	fn_real = f_real
 	x_train_real = np.load(fn_real, allow_pickle = True)
 
 	ans, man_gen, man_org = find_knn_trial(X_org = x_train_real, X_gen = x_train_generated)
