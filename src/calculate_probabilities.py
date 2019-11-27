@@ -44,6 +44,8 @@ if __name__ == "__main__":
 	# fn_generated = "../synthetic/x_train_binary_synthetic.npy"
 	fn_generated = f_generated
 	x_train_generated = np.load(fn_generated)
+	x_train_generated[x_train_generated >= 0.5] = 1
+	x_train_generated[x_train_generated < 0.5] = 0
 	prob_generated = calProb(dat = x_train_generated, headers = x_train_headers)
 
 	# fn_real = "../pretrain/x_train.matrix"
