@@ -24,7 +24,8 @@ def plotProb(prob_real, prob_generated, save_path):
 
 	graph = plt.figure()
 	plt.scatter(x = df['probabilities_real'], y = df['probabilities_generated'], s = 3, color = "red", alpha=0.8)
-	plt.plot([0, max(df['probabilities_real'])], [0, max(df['probabilities_generated'])], color = 'blue')
+	# plt.plot([0, max(df['probabilities_real'])], [0, max(df['probabilities_generated'])], color = 'blue')
+	plt.plot([0, 1], [0, 1], color = 'blue')
 	plt.title('Dimension-wise probabilities Comparison')
 	plt.xlabel('Real Probabilites')
 	plt.ylabel('Generated Probabilities')
