@@ -193,8 +193,8 @@ if __name__ == "__main__":
 	filename_test = "../pretrain/x_test_filtered_01.matrix"
 	file_test = np.load(filename_test, allow_pickle = True)
 
-	# df = randomForestClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
-	# df.to_csv("../summary_stats/random_forest_metrics.csv", index = False)
+	df = randomForestClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
+	df.to_csv("../summary_stats/random_forest_metrics.csv", index = False)
 
 	# df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
 	# df.to_csv("../summary_stats/random_forest_metrics_undersampling.csv", index = False)
