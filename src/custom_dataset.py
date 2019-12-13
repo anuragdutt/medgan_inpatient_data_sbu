@@ -14,9 +14,13 @@ if __name__ == "__main__":
 
 	readfile = sys.argv[1] 
 	outfile = sys.argv[2]
+	reshape = sys.argv[3]
 	fn = readfile
-	dat = np.load(fn)
-	dat = dat.reshape(dat.shape[0], -1)
+	dat = np.load(fn, allow_pickle = True)
+	if reshape:
+		dat = dat.reshape(dat.shape[0], -1)
+
+
 
 	header_file = "../data/headers.txt"
 	headers = []
