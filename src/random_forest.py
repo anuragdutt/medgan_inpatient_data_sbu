@@ -208,7 +208,7 @@ if __name__ == "__main__":
 	# df.to_csv("../summary_stats/random_forest_metrics.csv", index = False)
 
 	df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
-	df.to_csv("../summary_stats/random_forest_metrics_undersampling.csv", index = False)
+	df.to_csv("../summary_stats/random_forest_metrics_undersampling_nearmiss.csv", index = False)
 
 	# df = randomForestOversampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
 	# df.to_csv("../summary_stats/random_forest_metrics_oversampling.csv", index = False)
