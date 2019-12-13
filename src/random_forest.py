@@ -100,7 +100,6 @@ def randomForestUndersampling(train_mat, test_mat, headers, binary = False):
 		rf.fit(x_train_resampled, y_train_resampled)
 		# print("Ending Training")
 		y_pred = rf.predict(x_test)
-		print(pd.Series(y_test).isin([1]).sum(), pd.Series(y_pred).isin([1]).sum())
 		# exit(0)
 
 		f1 = f1_score(y_test, y_pred)
@@ -110,7 +109,7 @@ def randomForestUndersampling(train_mat, test_mat, headers, binary = False):
 		prob_true = sum(y_test)/len(y_test)
 		prob_pred = sum(y_pred)/len(y_pred)
 
-		print(f1)
+		print(f1, pd.Series(y_test).isin([1]).sum(), pd.Series(y_pred).isin([1]).sum())
 
 		retl = [col, acc, f1, recall, prob_true, prob_pred]
 		ret_list.append(retl)
