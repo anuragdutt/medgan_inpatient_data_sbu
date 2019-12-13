@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, f1_score, recall_score
+from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
 from imblearn.under_sampling import ClusterCentroids, RandomUnderSampler, NearMiss
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 
@@ -35,7 +35,7 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 		x_test = test.drop([col], axis = 1)
 		y_test = test.loc[:, col]
 
-		rf = RandomForestClassifier(n_estimators = 1000, random_state = 0, n_jobs = -1)
+		rf = RandomForestClassifier(n_estimators = 200, random_state = 0, n_jobs = -1)
 		# print("Starting training")
 		rf.fit(x_train, y_train)
 		# print("Ending Training")
@@ -44,12 +44,13 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 		f1 = f1_score(y_test, y_pred)
 		acc = accuracy_score(y_test, y_pred)
 		recall = recall_score(y_test, y_pred)
+		prec = precision_score(y_test, y_pred)
 		print(f1)
 
 		prob_true = sum(y_test)/len(y_test)
 		prob_pred = sum(y_pred)/len(y_pred)
 
-		retl = [col, acc, f1, recall, prob_true, prob_pred]
+		retl = [col, f1, acc, recall, prec, prob_true, prob_pred]
 		ret_list.append(retl)
 		# x_test = train.drop([col], axis = 1)
 		# y_train = train.loc[:, col]
@@ -58,7 +59,7 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 		# 	break
 
 
-	retdf = pd.DataFrame(ret_list, columns = ['variable', "f1", "accuracy", "recall", "prob_occurence_true", "prob_occurence_pred"])
+	retdf = pd.DataFrame(ret_list, columns = ['variable', "f1", "accuracy", "recall", "precision" "prob_occurence_true", "prob_occurence_pred"])
 	
 	return retdf
 
@@ -195,12 +196,14 @@ def randomForestOversampling(train_mat, test_mat, headers, binary = False):
 
 
 if __name__ == "__main__":
+	dataset = sys.argv[1]
+
 	# count_headers = np.load("../pretrain/count.types", allow_pickle = True)
 	headers_dict = np.load("../pretrain/x_train_filtered_01.types", allow_pickle = True)
 	bh = list(headers_dict.keys())
 
-	filename_generated = "../synthetic/x_train_filtered_01_synthetic.npy" 
-	file_generated = np.load(filename_generated)
+	filename_medgan = "../synthetic/x_train_filtered_01_synthetic.npy" 
+	file_medgan = np.load(filename_generated)
 	
 	filename_test = "../pretrain/x_test_filtered_01.matrix"
 	file_test = np.load(filename_test, allow_pickle = True)
@@ -208,12 +211,27 @@ if __name__ == "__main__":
 	filename_original = "../pretrain/x_train_filtered_01.matrix"
 	file_original = np.load(filename_original, allow_pickle = True)
 
+	filename_healthgan = "../pretrain/healthgan.matrix"
+	file_healthgan = np.load(filename_original, allow_pickle = True)
 
-	# df = randomForestClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
-	# df.to_csv("../summary_stats/random_forest_metrics.csv", index = False)
 
-	df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
-	df.to_csv("../summary_stats/random_forest_metrics_with_original.csv", index = False)
+	if dataset == "medgan":
+
+		df = randomForestClassification(train_mat = file_medgan, test_mat = file_test, headers = bh, binary = True)
+		df.to_csv("../summary_stats/random_forest_metrics_medgan.csv", index = False)
+
+	elif dataset == "original":
+
+		df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
+		df.to_csv("../summary_stats/random_forest_metrics_with_original.csv", index = False)
+
+	elif dataset == "healthgan":
+
+		df = randomForestClassification(train_mat = file_healthgan, test_mat = file_test, headers = bh, binary = True)
+		df.to_csv("../summary_stats/random_forest_metrics_with_healthgan.csv", index = False)
+
+	else:
+		print("please input a correct dataset name")
 
 
 	# df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
