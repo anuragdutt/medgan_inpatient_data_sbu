@@ -203,7 +203,7 @@ if __name__ == "__main__":
 	bh = list(headers_dict.keys())
 
 	filename_medgan = "../synthetic/x_train_filtered_01_synthetic.npy" 
-	file_medgan = np.load(filename_generated)
+	file_medgan = np.load(filename_medgan)
 	
 	filename_test = "../pretrain/x_test_filtered_01.matrix"
 	file_test = np.load(filename_test, allow_pickle = True)
