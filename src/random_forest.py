@@ -212,7 +212,7 @@ if __name__ == "__main__":
 	file_original = np.load(filename_original, allow_pickle = True)
 
 	filename_healthgan = "../pretrain/healthgan_v3.matrix"
-	file_healthgan = np.load(filename_original, allow_pickle = True)
+	file_healthgan = np.load(filename_healthgan, allow_pickle = True)
 
 
 	if dataset == "medgan":
