@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, recall_score
-from imblearn.under_sampling import ClusterCentroids
-from imblearn.over_sampling import RandomOverSampler
+from imblearn.under_sampling import ClusterCentroids, RandomUnderSampler, NearMiss
+from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 
 
 # from sklearn.metrics import 
@@ -85,10 +85,12 @@ def randomForestUndersampling(train_mat, test_mat, headers, binary = False):
 		x_train = train.drop([col], axis = 1)
 		y_train = train.loc[:, col]
 
-		cc = ClusterCentroids(random_state = 0)
-		print("clustering......")
+		# cc = ClusterCentroids(random_state = 0)
+		# cc = RandomUnderSampler(random_state=0)
+		cc = NearMiss(version=1)
+		# print("clustering......")
 		x_train_resampled, y_train_resampled = cc.fit_resample(x_train, y_train)
-		print("clustered.......")
+		# print("clustered.......")
 
 		x_test = test.drop([col], axis = 1)
 		y_test = test.loc[:, col]
@@ -98,6 +100,8 @@ def randomForestUndersampling(train_mat, test_mat, headers, binary = False):
 		rf.fit(x_train_resampled, y_train_resampled)
 		# print("Ending Training")
 		y_pred = rf.predict(x_test)
+		print(pd.Series(y_test).isin([1]).sum(), pd.Series(y_pred).isin([1]).sum())
+		# exit(0)
 
 		f1 = f1_score(y_test, y_pred)
 		acc = accuracy_score(y_test, y_pred)
@@ -142,22 +146,30 @@ def randomForestOversampling(train_mat, test_mat, headers, binary = False):
 		count = count + 1
 		print(count)
 
+		col = headers[25]
+
 		x_train = train.drop([col], axis = 1)
 		y_train = train.loc[:, col]
 
-		ros = RandomOverSampler(random_state=0)
-		print("Generating......")
+		# ros = RandomOverSampler(random_state=0)
+		ros = SMOTE(random_state=0)
+		# ros = ADASYN(random_state=0)
+		# print("generating ADASYN......")
 		x_train_resampled, y_train_resampled = ros.fit_resample(x_train, y_train)
-		print("Generated......")
+		# print("generated ADASYN.......")
+
 
 		x_test = test.drop([col], axis = 1)
 		y_test = test.loc[:, col]
 
-		rf = RandomForestClassifier(n_estimators = 1000, random_state = 0, n_jobs = -1)
+		rf = RandomForestClassifier(n_estimators = 100, n_jobs = -1)
 		# print("Starting training")
 		rf.fit(x_train_resampled, y_train_resampled)
 		# print("Ending Training")
 		y_pred = rf.predict(x_test)
+		print(pd.Series(y_test).isin([1]).sum())
+		print(pd.Series(y_pred).isin([1]).sum())
+		exit(0)
 
 		f1 = f1_score(y_test, y_pred)
 		acc = accuracy_score(y_test, y_pred)
@@ -193,14 +205,14 @@ if __name__ == "__main__":
 	filename_test = "../pretrain/x_test_filtered_01.matrix"
 	file_test = np.load(filename_test, allow_pickle = True)
 
-	df = randomForestClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
-	df.to_csv("../summary_stats/random_forest_metrics.csv", index = False)
+	# df = randomForestClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
+	# df.to_csv("../summary_stats/random_forest_metrics.csv", index = False)
 
-	# df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
-	# df.to_csv("../summary_stats/random_forest_metrics_undersampling.csv", index = False)
+	df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
+	df.to_csv("../summary_stats/random_forest_metrics_undersampling.csv", index = False)
 
-	df = randomForestOversampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
-	df.to_csv("../summary_stats/random_forest_metrics_oversampling.csv", index = False)
+	# df = randomForestOversampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
+	# df.to_csv("../summary_stats/random_forest_metrics_oversampling.csv", index = False)
 
 
 	# print(file_test.shape)
