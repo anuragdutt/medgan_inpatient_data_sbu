@@ -35,7 +35,7 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 		x_test = test.drop([col], axis = 1)
 		y_test = test.loc[:, col]
 
-		rf = RandomForestClassifier(n_estimators = 100, random_state = 0, n_jobs = -1)
+		rf = RandomForestClassifier(n_estimators = 300, random_state = 0, n_jobs = -1)
 		# print("Starting training")
 		rf.fit(x_train, y_train)
 		# print("Ending Training")
@@ -202,33 +202,33 @@ if __name__ == "__main__":
 	headers_dict = np.load("../pretrain/x_train_filtered_01.types", allow_pickle = True)
 	bh = list(headers_dict.keys())
 
-	filename_medgan = "../synthetic/x_train_filtered_01_synthetic.npy" 
+	filename_medgan = "../synthetic/x_synthetic_v3.npy" 
 	file_medgan = np.load(filename_medgan)
 	
-	filename_test = "../pretrain/x_test_filtered_01.matrix"
+	filename_test = "../pretrain/x_test_v3.matrix"
 	file_test = np.load(filename_test, allow_pickle = True)
 
-	filename_original = "../pretrain/x_train_filtered_01.matrix"
+	filename_original = "../pretrain/x_train_v3.matrix"
 	file_original = np.load(filename_original, allow_pickle = True)
 
-	filename_healthgan = "../pretrain/healthgan.matrix"
+	filename_healthgan = "../pretrain/healthgan_v3.matrix"
 	file_healthgan = np.load(filename_original, allow_pickle = True)
 
 
 	if dataset == "medgan":
 
 		df = randomForestClassification(train_mat = file_medgan, test_mat = file_test, headers = bh, binary = True)
-		df.to_csv("../summary_stats/random_forest_metrics_medgan.csv", index = False)
+		df.to_csv("../summary_stats/random_forest_metrics_medgan_v3.csv", index = False)
 
 	elif dataset == "original":
 
 		df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
-		df.to_csv("../summary_stats/random_forest_metrics_with_original.csv", index = False)
+		df.to_csv("../summary_stats/random_forest_metrics_original_v3.csv", index = False)
 
 	elif dataset == "healthgan":
 
 		df = randomForestClassification(train_mat = file_healthgan, test_mat = file_test, headers = bh, binary = True)
-		df.to_csv("../summary_stats/random_forest_metrics_with_healthgan.csv", index = False)
+		df.to_csv("../summary_stats/random_forest_metrics_healthgan_v3.csv", index = False)
 
 	else:
 		print("please input a correct dataset name")
