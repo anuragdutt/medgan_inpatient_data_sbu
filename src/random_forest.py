@@ -44,6 +44,7 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 		f1 = f1_score(y_test, y_pred)
 		acc = accuracy_score(y_test, y_pred)
 		recall = recall_score(y_test, y_pred)
+		print(f1)
 
 		prob_true = sum(y_test)/len(y_test)
 		prob_pred = sum(y_pred)/len(y_pred)
@@ -204,11 +205,19 @@ if __name__ == "__main__":
 	filename_test = "../pretrain/x_test_filtered_01.matrix"
 	file_test = np.load(filename_test, allow_pickle = True)
 
+	filename_original = "../pretrain/x_train_filtered_01.matrix"
+	file_original = np.load(filename_original, allow_pickle = True)
+
+
 	# df = randomForestClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
 	# df.to_csv("../summary_stats/random_forest_metrics.csv", index = False)
 
-	df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
-	df.to_csv("../summary_stats/random_forest_metrics_undersampling_randomundersampler.csv", index = False)
+	df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
+	df.to_csv("../summary_stats/random_forest_metrics_with_original.csv", index = False)
+
+
+	# df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
+	# df.to_csv("../summary_stats/random_forest_metrics_undersampling_randomundersampler.csv", index = False)
 
 	# df = randomForestOversampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
 	# df.to_csv("../summary_stats/random_forest_metrics_oversampling.csv", index = False)
