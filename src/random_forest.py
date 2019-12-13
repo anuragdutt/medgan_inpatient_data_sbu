@@ -35,7 +35,7 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 		x_test = test.drop([col], axis = 1)
 		y_test = test.loc[:, col]
 
-		rf = RandomForestClassifier(n_estimators = 200, random_state = 0, n_jobs = -1)
+		rf = RandomForestClassifier(n_estimators = 100, random_state = 0, n_jobs = -1)
 		# print("Starting training")
 		rf.fit(x_train, y_train)
 		# print("Ending Training")
@@ -55,8 +55,8 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 		# x_test = train.drop([col], axis = 1)
 		# y_train = train.loc[:, col]
 		# rf = RandomForestClassifier(n_estimators = 10000, random_state = 0, n_jobs = -1)
-		# if count == 5:
-		# 	break
+		if count == 5:
+			break
 
 
 	retdf = pd.DataFrame(ret_list, columns = ['variable', "f1", "accuracy", "recall", "precision" "prob_occurence_true", "prob_occurence_pred"])
