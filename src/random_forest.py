@@ -204,16 +204,19 @@ if __name__ == "__main__":
 
 	filename_medgan = "../synthetic/x_synthetic_v3.npy" 
 	file_medgan = np.load(filename_medgan)
+	print(file_medgan.shape)
 	
 	filename_test = "../pretrain/x_test_v3.matrix"
 	file_test = np.load(filename_test, allow_pickle = True)
+	print(file_test.shape)
 
 	filename_original = "../pretrain/x_train_v3.matrix"
 	file_original = np.load(filename_original, allow_pickle = True)
+	print(file_original.shape)
 
 	filename_healthgan = "../pretrain/healthgan_v3.matrix"
 	file_healthgan = np.load(filename_healthgan, allow_pickle = True)
-
+	print(healthgan.shape)
 
 	if dataset == "medgan":
 
@@ -224,7 +227,7 @@ if __name__ == "__main__":
 
 		df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
 		df.to_csv("../summary_stats/random_forest_metrics_original_v3.csv", index = False)
-
+ 
 	elif dataset == "healthgan":
 
 		df = randomForestClassification(train_mat = file_healthgan, test_mat = file_test, headers = bh, binary = True)
