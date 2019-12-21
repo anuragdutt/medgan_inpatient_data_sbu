@@ -32,13 +32,13 @@ def convert_to_3digit_icd9(dxStr):
         else: return dxStr
 
 if __name__ == '__main__':
-    # admissionFile = sys.argv[1]
-    # diagnosisFile = sys.argv[2]
-    # outFile = sys.argv[3]
-    # binary_count = sys.argv[4]
+    admissionFile = sys.argv[1]
+    diagnosisFile = sys.argv[2]
+    outFile = sys.argv[3]
+    binary_count = sys.argv[4]
 
-    admissionFile = "mimic_raw/ADMISSIONS.csv"
-    diagnosisFile = "mimic_raw/DIAGNOSES_ICD.csv"
+    # admissionFile = "mimic_raw/ADMISSIONS.csv"
+    # diagnosisFile = "mimic_raw/DIAGNOSES_ICD.csv"
 
     binary_count = "binary"
 
