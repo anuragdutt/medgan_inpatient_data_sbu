@@ -60,7 +60,7 @@ if __name__ == '__main__':
             admTime = datetime.strptime(tokens[2], '%Y-%m-%d %H:%M:%S')
         except:
             print(line)
-            print(admTime)
+            exit(0)
         admDateMap[admId] = admTime
         if pid in pidAdmMap: pidAdmMap[pid].append(admId)
         else: pidAdmMap[pid] = [admId]
