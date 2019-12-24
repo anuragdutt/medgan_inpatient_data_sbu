@@ -216,7 +216,7 @@ if __name__ == "__main__":
 		filename_original = "../pretrain/x_train_v3.matrix"
 		file_original = np.load(filename_original, allow_pickle = True)
 		print(file_original.shape)
-
+		exit(0)
 
 		if dataset == "medgan":
 
