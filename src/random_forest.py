@@ -196,45 +196,74 @@ def randomForestOversampling(train_mat, test_mat, headers, binary = False):
 
 
 if __name__ == "__main__":
-	dataset = sys.argv[1]
+	database = sys.argv[1]
+	dataset = sys.argv[2]
 
 	# count_headers = np.load("../pretrain/count.types", allow_pickle = True)
-	headers_dict = np.load("../pretrain/x_train_filtered_01.types", allow_pickle = True)
-	bh = list(headers_dict.keys())
-
-	filename_medgan = "../synthetic/x_synthetic_v3.npy" 
-	file_medgan = np.load(filename_medgan)
-	print(file_medgan.shape)
 	
-	filename_test = "../pretrain/x_test_v3.matrix"
-	file_test = np.load(filename_test, allow_pickle = True)
-	print(file_test.shape)
+	if database == "cerner":
+		headers_dict = np.load("../pretrain/x_train_filtered_01.types", allow_pickle = True)
+		bh = list(headers_dict.keys())
 
-	filename_original = "../pretrain/x_train_v3.matrix"
-	file_original = np.load(filename_original, allow_pickle = True)
-	print(file_original.shape)
+		filename_medgan = "../synthetic/x_synthetic_v3.npy" 
+		file_medgan = np.load(filename_medgan)
+		print(file_medgan.shape)
+		
+		filename_test = "../pretrain/x_test_v3.matrix"
+		file_test = np.load(filename_test, allow_pickle = True)
+		print(file_test.shape)
 
-	filename_healthgan = "../pretrain/healthgan_v3.matrix"
-	file_healthgan = np.load(filename_healthgan, allow_pickle = True)
-	print(file_healthgan.shape)
+		filename_original = "../pretrain/x_train_v3.matrix"
+		file_original = np.load(filename_original, allow_pickle = True)
+		print(file_original.shape)
 
-	if dataset == "medgan":
 
-		df = randomForestClassification(train_mat = file_medgan, test_mat = file_test, headers = bh, binary = True)
-		df.to_csv("../summary_stats/random_forest_metrics_medgan_v3.csv", index = False)
+		if dataset == "medgan":
 
-	elif dataset == "original":
+			df = randomForestClassification(train_mat = file_medgan, test_mat = file_test, headers = bh, binary = True)
+			df.to_csv("../summary_stats/random_forest_metrics_medgan_v3.csv", index = False)
 
-		df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
-		df.to_csv("../summary_stats/random_forest_metrics_original_v3.csv", index = False)
- 
-	elif dataset == "healthgan":
+		elif dataset == "original":
 
-		df = randomForestClassification(train_mat = file_healthgan, test_mat = file_test, headers = bh, binary = True)
-		df.to_csv("../summary_stats/random_forest_metrics_healthgan_v3.csv", index = False)
+			df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
+			df.to_csv("../summary_stats/random_forest_metrics_original_v3.csv", index = False)
+	 
+		elif dataset == "healthgan":
 
-	else:
-		print("please input a correct dataset name")
+			df = randomForestClassification(train_mat = file_healthgan, test_mat = file_test, headers = bh, binary = True)
+			df.to_csv("../summary_stats/random_forest_metrics_healthgan_v3.csv", index = False)
+
+
+		else:
+			print("please input a correct dataset name")
+
+	elif database == "mimic":
+		headers_dict = np.load("../pretrain/mimic_train.types", allow_pickle = True)
+		bh = list(headers_dict.keys())
+
+		filename_generated = "../synthetic/mimic_binary_synthetic.npy" 
+		file_generated = np.load(filename_generated)
+		print(file_generated.shape)
+		
+		filename_test = "../pretrain/mimic_test.matrix"
+		file_test = np.load(filename_test, allow_pickle = True)
+		print(file_test.shape)
+
+		filename_original = "../pretrain/mimic_train.matrix"
+		file_original = np.load(filename_original, allow_pickle = True)
+		print(file_original.shape)
+
+		if dataset == "generated":
+
+			df = randomForestClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
+			df.to_csv("../summary_stats/random_forest_metrics_mimic_generated.csv", index = False)
+
+		elif dataset == "original":
+
+			df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
+			df.to_csv("../summary_stats/random_forest_metrics_mimic_original.csv", index = False)
+
+
 
 
 	# df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
