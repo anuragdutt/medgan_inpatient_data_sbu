@@ -264,6 +264,8 @@ if __name__ == "__main__":
 			df.to_csv("../summary_stats/random_forest_metrics_mimic_original.csv", index = False)
 
 
+		else:
+			print("please input a correct dataset name")
 
 
 	# df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
