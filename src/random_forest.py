@@ -66,144 +66,22 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 
 
 
-def randomForestUndersampling(train_mat, test_mat, headers, binary = False):
-	train = pd.DataFrame(data = train_mat, columns = headers)
-	test = pd.DataFrame(data = test_mat, columns = headers)
-
-	if binary:
-		train[train >= 0.5] = 1
-		train[train < 0.5] = 0
-
-		test[test >= 0.5] = 1
-		test[test < 0.5] = 0
-
-	ret_list = []
-	count = 0
-
-	for col in headers:
-		count = count + 1
-		print(count)
-
-		x_train = train.drop([col], axis = 1)
-		y_train = train.loc[:, col]
-
-		# cc = ClusterCentroids(random_state = 0)
-		cc = RandomUnderSampler(random_state=0)
-		# cc = NearMiss(version=1)
-		# print("clustering......")
-		x_train_resampled, y_train_resampled = cc.fit_resample(x_train, y_train)
-		# print("clustered.......")
-
-		x_test = test.drop([col], axis = 1)
-		y_test = test.loc[:, col]
-
-		rf = RandomForestClassifier(n_estimators = 300, random_state = 0, n_jobs = -1)
-		# print("Starting training")
-		rf.fit(x_train_resampled, y_train_resampled)
-		# print("Ending Training")
-		y_pred = rf.predict(x_test)
-		# exit(0)
-
-		f1 = f1_score(y_test, y_pred)
-		acc = accuracy_score(y_test, y_pred)
-		recall = recall_score(y_test, y_pred)
-
-		prob_true = sum(y_test)/len(y_test)
-		prob_pred = sum(y_pred)/len(y_pred)
-
-		print(f1, pd.Series(y_test).isin([1]).sum(), pd.Series(y_pred).isin([1]).sum())
-
-		retl = [col, acc, f1, recall, prob_true, prob_pred]
-		ret_list.append(retl)
-		# x_test = train.drop([col], axis = 1)
-		# y_train = train.loc[:, col]
-		# rf = RandomForestClassifier(n_estimators = 10000, random_state = 0, n_jobs = -1)
-		# if count == 5:
-		# 	break
-
-
-	retdf = pd.DataFrame(ret_list, columns = ['variable', "f1", "accuracy", "recall", "prob_occurence_true", "prob_occurence_pred"])
-	
-	return retdf
-
-
-
-
-def randomForestOversampling(train_mat, test_mat, headers, binary = False):
-	train = pd.DataFrame(data = train_mat, columns = headers)
-	test = pd.DataFrame(data = test_mat, columns = headers)
-
-	if binary:
-		train[train >= 0.5] = 1
-		train[train < 0.5] = 0
-
-		test[test >= 0.5] = 1
-		test[test < 0.5] = 0
-
-	ret_list = []
-	count = 0
-
-	for col in headers:
-		count = count + 1
-		print(count)
-
-		col = headers[25]
-
-		x_train = train.drop([col], axis = 1)
-		y_train = train.loc[:, col]
-
-		# ros = RandomOverSampler(random_state=0)
-		ros = SMOTE(random_state=0)
-		# ros = ADASYN(random_state=0)
-		# print("generating ADASYN......")
-		x_train_resampled, y_train_resampled = ros.fit_resample(x_train, y_train)
-		# print("generated ADASYN.......")
-
-
-		x_test = test.drop([col], axis = 1)
-		y_test = test.loc[:, col]
-
-		rf = RandomForestClassifier(n_estimators = 100, n_jobs = -1)
-		# print("Starting training")
-		rf.fit(x_train_resampled, y_train_resampled)
-		# print("Ending Training")
-		y_pred = rf.predict(x_test)
-		print(pd.Series(y_test).isin([1]).sum())
-		print(pd.Series(y_pred).isin([1]).sum())
-		exit(0)
-
-		f1 = f1_score(y_test, y_pred)
-		acc = accuracy_score(y_test, y_pred)
-		recall = recall_score(y_test, y_pred)
-
-		prob_true = sum(y_test)/len(y_test)
-		prob_pred = sum(y_pred)/len(y_pred)
-
-		print(f1)
-
-		retl = [col, acc, f1, recall, prob_true, prob_pred]
-		ret_list.append(retl)
-		# x_test = train.drop([col], axis = 1)
-		# y_train = train.loc[:, col]
-		# rf = RandomForestClassifier(n_estimators = 10000, random_state = 0, n_jobs = -1)
-		# if count == 5:
-		# 	break
-
-
-	retdf = pd.DataFrame(ret_list, columns = ['variable', "f1", "accuracy", "recall", "prob_occurence_true", "prob_occurence_pred"])
-	
-	return retdf
-
 
 if __name__ == "__main__":
-	database = sys.argv[1]
-	dataset = sys.argv[2]
+	# database = sys.argv[1]
+	# dataset = sys.argv[2]
+
+	database = "cerner"
+
 
 	# count_headers = np.load("../pretrain/count.types", allow_pickle = True)
 	
 	if database == "cerner":
 		headers_dict = np.load("../pretrain/x_train_filtered_01.types", allow_pickle = True)
 		bh = list(headers_dict.keys())
+
+		filename_healthgan = "../pretrain/healthgan.matrix"
+		file_healthgan = np.load(filename_healthgan, allow_pickle = True)
 
 		filename_medgan = "../synthetic/x_synthetic_v3.npy" 
 		file_medgan = np.load(filename_medgan)
@@ -216,7 +94,6 @@ if __name__ == "__main__":
 		filename_original = "../pretrain/x_train_v3.matrix"
 		file_original = np.load(filename_original, allow_pickle = True)
 		print(file_original.shape)
-		exit(0)
 
 		if dataset == "medgan":
 
@@ -282,3 +159,131 @@ if __name__ == "__main__":
 
 
 
+
+# def randomForestUndersampling(train_mat, test_mat, headers, binary = False):
+# 	train = pd.DataFrame(data = train_mat, columns = headers)
+# 	test = pd.DataFrame(data = test_mat, columns = headers)
+
+# 	if binary:
+# 		train[train >= 0.5] = 1
+# 		train[train < 0.5] = 0
+
+# 		test[test >= 0.5] = 1
+# 		test[test < 0.5] = 0
+
+# 	ret_list = []
+# 	count = 0
+
+# 	for col in headers:
+# 		count = count + 1
+# 		print(count)
+
+# 		x_train = train.drop([col], axis = 1)
+# 		y_train = train.loc[:, col]
+
+# 		# cc = ClusterCentroids(random_state = 0)
+# 		cc = RandomUnderSampler(random_state=0)
+# 		# cc = NearMiss(version=1)
+# 		# print("clustering......")
+# 		x_train_resampled, y_train_resampled = cc.fit_resample(x_train, y_train)
+# 		# print("clustered.......")
+
+# 		x_test = test.drop([col], axis = 1)
+# 		y_test = test.loc[:, col]
+
+# 		rf = RandomForestClassifier(n_estimators = 300, random_state = 0, n_jobs = -1)
+# 		# print("Starting training")
+# 		rf.fit(x_train_resampled, y_train_resampled)
+# 		# print("Ending Training")
+# 		y_pred = rf.predict(x_test)
+# 		# exit(0)
+
+# 		f1 = f1_score(y_test, y_pred)
+# 		acc = accuracy_score(y_test, y_pred)
+# 		recall = recall_score(y_test, y_pred)
+
+# 		prob_true = sum(y_test)/len(y_test)
+# 		prob_pred = sum(y_pred)/len(y_pred)
+
+# 		print(f1, pd.Series(y_test).isin([1]).sum(), pd.Series(y_pred).isin([1]).sum())
+
+# 		retl = [col, acc, f1, recall, prob_true, prob_pred]
+# 		ret_list.append(retl)
+# 		# x_test = train.drop([col], axis = 1)
+# 		# y_train = train.loc[:, col]
+# 		# rf = RandomForestClassifier(n_estimators = 10000, random_state = 0, n_jobs = -1)
+# 		# if count == 5:
+# 		# 	break
+
+
+# 	retdf = pd.DataFrame(ret_list, columns = ['variable', "f1", "accuracy", "recall", "prob_occurence_true", "prob_occurence_pred"])
+	
+# 	return retdf
+
+
+
+
+# def randomForestOversampling(train_mat, test_mat, headers, binary = False):
+# 	train = pd.DataFrame(data = train_mat, columns = headers)
+# 	test = pd.DataFrame(data = test_mat, columns = headers)
+
+# 	if binary:
+# 		train[train >= 0.5] = 1
+# 		train[train < 0.5] = 0
+
+# 		test[test >= 0.5] = 1
+# 		test[test < 0.5] = 0
+
+# 	ret_list = []
+# 	count = 0
+
+# 	for col in headers:
+# 		count = count + 1
+# 		print(count)
+
+# 		col = headers[25]
+
+# 		x_train = train.drop([col], axis = 1)
+# 		y_train = train.loc[:, col]
+
+# 		# ros = RandomOverSampler(random_state=0)
+# 		ros = SMOTE(random_state=0)
+# 		# ros = ADASYN(random_state=0)
+# 		# print("generating ADASYN......")
+# 		x_train_resampled, y_train_resampled = ros.fit_resample(x_train, y_train)
+# 		# print("generated ADASYN.......")
+
+
+# 		x_test = test.drop([col], axis = 1)
+# 		y_test = test.loc[:, col]
+
+# 		rf = RandomForestClassifier(n_estimators = 100, n_jobs = -1)
+# 		# print("Starting training")
+# 		rf.fit(x_train_resampled, y_train_resampled)
+# 		# print("Ending Training")
+# 		y_pred = rf.predict(x_test)
+# 		print(pd.Series(y_test).isin([1]).sum())
+# 		print(pd.Series(y_pred).isin([1]).sum())
+# 		exit(0)
+
+# 		f1 = f1_score(y_test, y_pred)
+# 		acc = accuracy_score(y_test, y_pred)
+# 		recall = recall_score(y_test, y_pred)
+
+# 		prob_true = sum(y_test)/len(y_test)
+# 		prob_pred = sum(y_pred)/len(y_pred)
+
+# 		print(f1)
+
+# 		retl = [col, acc, f1, recall, prob_true, prob_pred]
+# 		ret_list.append(retl)
+# 		# x_test = train.drop([col], axis = 1)
+# 		# y_train = train.loc[:, col]
+# 		# rf = RandomForestClassifier(n_estimators = 10000, random_state = 0, n_jobs = -1)
+# 		# if count == 5:
+# 		# 	break
+
+
+# 	retdf = pd.DataFrame(ret_list, columns = ['variable', "f1", "accuracy", "recall", "prob_occurence_true", "prob_occurence_pred"])
+	
+# 	return retdf
