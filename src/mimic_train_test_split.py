@@ -9,7 +9,7 @@ def convertTo3DigitIcd9(dxStr):
 	return str(dxStr)[:3]	
 
 
-def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2):
+def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2, common = 1):
 	adm = pd.read_csv(adm_file)
 	dia = pd.read_csv(diag_file)
 
@@ -49,9 +49,17 @@ def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2):
 	dia_test = dia_test.drop(['pid-vid'], axis = 1)
 
 	dia_train['icd_3digit'] = dia_train['icd_codes'].map(convertTo3DigitIcd9)
-	print(len(dia_train['icd_3digit'].unique()))
 
 	dia_test['icd_3digit'] = dia_test['icd_codes'].map(convertTo3DigitIcd9)
+
+	if common == 1:
+		train_icd = dia_train['icd_3digit']
+		test_icd = dia_test['icd_3digit']
+		common_icd = list(set(train_icd).intersection(set(test_icd)))
+		dia_train = dia_train.loc[dia_train['icd_3digit'].isin(common_icd)]
+		dia_test = dia_test.loc[dia_test['icd_3digit'].isin(common_icd)]
+
+	print(len(dia_train['icd_3digit'].unique()))
 	print(len(dia_test['icd_3digit'].unique()))
 
 	dia = dia.drop(['icd_3digit'], axis = 1)
@@ -68,7 +76,12 @@ if __name__  == "__main__":
 	af = "../mimic_raw/ADMISSIONS.csv"
 	df = "../mimic_raw/DIAGNOSES_ICD.csv"
 
-	adm_train, dia_train, adm_test, dia_test = trainTestSplitEncounter(af, df, t_size = t_size)
+	adm_train, dia_train, adm_test, dia_test = trainTestSplitEncounter(af, df, t_size = t_size, common = 1)
+
+	print("Shape of ADMISSION TRAIN:", adm_train.shape)
+	print("Shape of ADMISSION TEST:", adm_test.shape)
+	print("Shape of DIA TRAIN:", dia_train.shape)
+	print("Shape of DIA TEST:", dia_test.shape)
 
 	adm_train.to_csv("../mimic_raw/ADMISSIONS_TRAIN.csv", index = False)
 	dia_train.to_csv("../mimic_raw/DIAGNOSES_ICD_TRAIN.csv", index = False)

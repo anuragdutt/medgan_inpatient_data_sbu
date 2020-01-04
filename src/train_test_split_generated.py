@@ -9,7 +9,7 @@ def convertTo3DigitIcd9(dxStr):
 	return str(dxStr)[:3]	
 
 
-def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2):
+def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2, common = 1):
 	adm = pd.read_csv(adm_file)
 	dia = pd.read_csv(diag_file)
 
@@ -24,7 +24,6 @@ def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2):
 	apvid = adm['pid-vid'].tolist()
 	dpvid = dia['pid-vid'].tolist()
 	cpvid = list(set(apvid) & set(dpvid))
-
 	adm = adm[adm['pid-vid'].isin(cpvid)]
 	dia = dia[dia['pid-vid'].isin(cpvid)]
 
@@ -44,10 +43,20 @@ def trainTestSplitEncounter(adm_file, diag_file, t_size = 0.2):
 	dia_test = dia_test.drop(['pid-vid'], axis = 1)
 
 	dia_train['icd_3digit'] = dia_train['icd_codes'].map(convertTo3DigitIcd9)
-	print(len(dia_train['icd_3digit'].unique()))
 
 	dia_test['icd_3digit'] = dia_test['icd_codes'].map(convertTo3DigitIcd9)
+
+	if common == 1:
+		train_icd = dia_train['icd_3digit']
+		test_icd = dia_test['icd_3digit']
+		common_icd = list(set(train_icd).intersection(set(test_icd)))
+		dia_train = dia_train.loc[dia_train['icd_3digit'].isin(common_icd)]
+		dia_test = dia_test.loc[dia_test['icd_3digit'].isin(common_icd)]
+
+
+	print(len(dia_train['icd_3digit'].unique()))
 	print(len(dia_test['icd_3digit'].unique()))
+
 
 	dia = dia.drop(['icd_3digit'], axis = 1)
 	dia_train = dia_train.drop(['icd_3digit'], axis = 1)
@@ -72,7 +81,7 @@ if __name__ == "__main__":
 
 	af = "../generated/ADMISSIONS_GENERATED_NOMERGE.csv"
 	df = "../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv"
-	adm_train, dia_train, adm_test, dia_test = trainTestSplitEncounter(af, df, t_size = t_size)
+	adm_train, dia_train, adm_test, dia_test = trainTestSplitEncounter(af, df, t_size = t_size, common = 1)
 	
 	print("Shape of ADMISSION TRAIN:", adm_train.shape)
 	print("Shape of ADMISSION TEST:", adm_test.shape)
@@ -85,7 +94,7 @@ if __name__ == "__main__":
 	adm_test.to_csv("../generated/ADMISSIONS_GENERATED_TEST.csv", index = False)
 	dia_test.to_csv("../generated/DIAGNOSES_ICD_GENERATED_TEST.csv", index = False)
 
-
+	
 	# loading the binary dataset
 	# adm_chk = pd.read_csv("../generated/ADMISSIONS_GENERATED_NOMERGE.csv")
 	# dia_chk = pd.read_csv("../generated/DIAGNOSES_ICD_GENERATED_NOMERGE.csv")
