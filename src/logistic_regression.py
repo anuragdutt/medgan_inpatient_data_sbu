@@ -39,7 +39,7 @@ def logisticRegressionClassification(train_mat, test_mat, headers, binary = Fals
 		# print("Starting training")
 		lr.fit(x_train, y_train)
 		# print("Ending Training")
-		y_pred = rf.predict(x_test)
+		y_pred = lr.predict(x_test)
 
 		f1 = f1_score(y_test, y_pred)
 		acc = accuracy_score(y_test, y_pred)
