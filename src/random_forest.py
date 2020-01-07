@@ -71,7 +71,7 @@ if __name__ == "__main__":
 	database = sys.argv[1]
 	dataset = sys.argv[2]
 
-	database = "cerner"
+	# database = "cerner"
 
 
 	# count_headers = np.load("../pretrain/count.types", allow_pickle = True)
