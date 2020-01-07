@@ -2,8 +2,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
-from sklearn import linear_model
-# from sklearn.linear_model import logisticRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
 from imblearn.under_sampling import ClusterCentroids, RandomUnderSampler, NearMiss
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
@@ -36,7 +35,7 @@ def logisticRegressionClassification(train_mat, test_mat, headers, binary = Fals
 		x_test = test.drop([col], axis = 1)
 		y_test = test.loc[:, col]
 
-		lr = linear_model.logisticRegression(max_iter = 300, random_state = 0)
+		lr = LogisticRegression(max_iter = 300, random_state = 0)
 		# print("Starting training")
 		lr.fit(x_train, y_train)
 		# print("Ending Training")
