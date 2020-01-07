@@ -37,14 +37,22 @@ def logisticRegressionClassification(train_mat, test_mat, headers, binary = Fals
 
 		lr = LogisticRegression(max_iter = 300, random_state = 0)
 		# print("Starting training")
-		lr.fit(x_train, y_train)
-		# print("Ending Training")
-		y_pred = lr.predict(x_test)
+		try:
+			lr.fit(x_train, y_train)
+			# print("Ending Training")
+			y_pred = lr.predict(x_test)
 
-		f1 = f1_score(y_test, y_pred)
-		acc = accuracy_score(y_test, y_pred)
-		recall = recall_score(y_test, y_pred)
-		prec = precision_score(y_test, y_pred)
+			f1 = f1_score(y_test, y_pred)
+			acc = accuracy_score(y_test, y_pred)
+			recall = recall_score(y_test, y_pred)
+			prec = precision_score(y_test, y_pred)
+		except:
+			f1 = 0.0
+			acc = 0.0
+			recall = 0.0
+			prec = 0.0
+			print("value error detected. one class of values encountered.")
+
 		print(f1)
 
 		prob_true = sum(y_test)/len(y_test)
