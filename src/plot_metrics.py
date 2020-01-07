@@ -9,6 +9,10 @@ def plotProb(mx, my, metric, save_path, y_name):
 
 	df_x = mx.loc[:, metric]
 	df_y = my.loc[:, metric]
+
+	# print(df_x.head(20))
+	# print(df_y.head(20))
+	
 	
 	# prob = prob.sort_values(ascending = True)
 
@@ -16,9 +20,11 @@ def plotProb(mx, my, metric, save_path, y_name):
 	plt.scatter(x = df_x, y = df_y, s = 3, color = "red", alpha=0.8)
 	# plt.plot([0, max(df['probabilities_real'])], [0, max(df['probabilities_generated'])], color = 'blue')
 	plt.plot([0, max(df_x)], [0, max(df_y)], color = 'blue')
+	# plt.plot([0, 1], [0, 1], color = 'blue')
 	plt.title(metric + ' Comparison ' + y_name + ' vs real')
 	plt.xlabel('Real ' + metric)
 	plt.ylabel(y_name + ' ' + metric)
+	# plt.show()
 	graph.savefig(save_path, bbox_inches='tight')
 
 
