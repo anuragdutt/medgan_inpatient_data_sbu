@@ -68,8 +68,8 @@ def randomForestClassification(train_mat, test_mat, headers, binary = False):
 
 
 if __name__ == "__main__":
-	# database = sys.argv[1]
-	# dataset = sys.argv[2]
+	database = sys.argv[1]
+	dataset = sys.argv[2]
 
 	database = "cerner"
 
@@ -143,6 +143,9 @@ if __name__ == "__main__":
 
 		else:
 			print("please input a correct dataset name")
+
+	else:
+		print("Please input a correct database")
 
 
 	# df = randomForestUndersampling(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
