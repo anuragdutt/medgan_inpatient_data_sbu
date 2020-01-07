@@ -31,6 +31,8 @@ def logisticRegressionClassification(train_mat, test_mat, headers, binary = Fals
 
 		x_train = train.drop([col], axis = 1)
 		y_train = train.loc[:, col]
+		# y_train[y_train >= 0.5] = 1
+		# y_train[y_train < 0.5] = 0
 
 		x_test = test.drop([col], axis = 1)
 		y_test = test.loc[:, col]
@@ -41,22 +43,25 @@ def logisticRegressionClassification(train_mat, test_mat, headers, binary = Fals
 			lr.fit(x_train, y_train)
 			# print("Ending Training")
 			y_pred = lr.predict(x_test)
-
 			f1 = f1_score(y_test, y_pred)
 			acc = accuracy_score(y_test, y_pred)
 			recall = recall_score(y_test, y_pred)
 			prec = precision_score(y_test, y_pred)
+
+			prob_true = sum(y_test)/len(y_test)
+			prob_pred = sum(y_pred)/len(y_pred)
+
 		except:
 			f1 = 0.0
 			acc = 0.0
 			recall = 0.0
 			prec = 0.0
+			prob_pred = 0.0
+			prob_true = 0.0
 			print("value error detected. one class of values encountered.")
 
 		print(f1)
 
-		prob_true = sum(y_test)/len(y_test)
-		prob_pred = sum(y_pred)/len(y_pred)
 
 		retl = [col, f1, acc, recall, prec, prob_true, prob_pred]
 		ret_list.append(retl)
@@ -79,7 +84,8 @@ if __name__ == "__main__":
 	database = sys.argv[1]
 	dataset = sys.argv[2]
 
-	# database = "cerner"
+	# database = "mimic"
+	# dataset = "original"
 
 
 	# count_headers = np.load("../pretrain/count.types", allow_pickle = True)
@@ -123,18 +129,19 @@ if __name__ == "__main__":
 			print("please input a correct dataset name")
 
 	elif database == "mimic":
-		headers_dict = np.load("../pretrain/mimic_train.types", allow_pickle = True)
+		headers_dict = np.load("../pretrain/mimic_binary_train.types", allow_pickle = True)
 		bh = list(headers_dict.keys())
 
 		filename_generated = "../synthetic/mimic_binary_synthetic.npy" 
+		# filename_generated = "../synthetic/mimic_binary_synthetic.npy" 
 		file_generated = np.load(filename_generated)
 		print(file_generated.shape)
 		
-		filename_test = "../pretrain/mimic_test.matrix"
+		filename_test = "../pretrain/mimic_binary_test.matrix"
 		file_test = np.load(filename_test, allow_pickle = True)
 		print(file_test.shape)
 
-		filename_original = "../pretrain/mimic_train.matrix"
+		filename_original = "../pretrain/mimic_binary_train.matrix"
 		file_original = np.load(filename_original, allow_pickle = True)
 		print(file_original.shape)
 
