@@ -98,17 +98,17 @@ if __name__ == "__main__":
 
 		if dataset == "medgan":
 
-			df = randomForestClassification(train_mat = file_medgan, test_mat = file_test, headers = bh, binary = True)
+			df = logisticRegressionClassification(train_mat = file_medgan, test_mat = file_test, headers = bh, binary = True)
 			df.to_csv("../summary_stats/random_forest_metrics_medgan_v3.csv", index = False)
 
 		elif dataset == "original":
 
-			df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
+			df = logisticRegressionClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
 			df.to_csv("../summary_stats/random_forest_metrics_original_v3.csv", index = False)
 	 
 		elif dataset == "healthgan":
 
-			df = randomForestClassification(train_mat = file_healthgan, test_mat = file_test, headers = bh, binary = True)
+			df = logisticRegressionClassification(train_mat = file_healthgan, test_mat = file_test, headers = bh, binary = True)
 			df.to_csv("../summary_stats/random_forest_metrics_healthgan_v3.csv", index = False)
 
 
@@ -133,12 +133,12 @@ if __name__ == "__main__":
 
 		if dataset == "generated":
 
-			df = randomForestClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
+			df = logisticRegressionClassification(train_mat = file_generated, test_mat = file_test, headers = bh, binary = True)
 			df.to_csv("../summary_stats/random_forest_metrics_mimic_generated.csv", index = False)
 
 		elif dataset == "original":
 
-			df = randomForestClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
+			df = logisticRegressionClassification(train_mat = file_original, test_mat = file_test, headers = bh, binary = True)
 			df.to_csv("../summary_stats/random_forest_metrics_mimic_original.csv", index = False)
 
 
